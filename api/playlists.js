@@ -3,6 +3,10 @@ import {
   getPlaylist,
   getPlaylists,
 } from "#db/queries/playlists";
+import {
+  addTrackToPlaylist,
+  getTracksByPlaylist,
+} from "#db/queries/playlists_tracks";
 import { Router } from "express";
 const router = Router();
 export default router;
@@ -37,4 +41,22 @@ router.param("id", async (req, res, next) => {
 
 router.get("/:id", async (req, res) => {
   res.send(req.playlist);
+});
+
+router.get("/:id/tracks", async (req, res) => {
+  const tracks = await getTracksByPlaylist(req.playlist.id);
+  res.send(tracks);
+});
+
+router.post("/:id/tracks", async (req, res) => {
+  if (!req.body) return res.status(400).send("Request body is missing.");
+
+  const { trackId } = req.body;
+  if (!trackId)
+    return res.status(400).send("Request body is missing required fields.");
+
+  const track = await addTrackToPlaylist(req.playlist.id, trackId);
+  if (!track) return res.status(400).send("Track does not exist.");
+
+  res.status(201).send(track);
 });
