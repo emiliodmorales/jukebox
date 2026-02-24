@@ -29,13 +29,13 @@ router.post("/", async (req, res) => {
 
 router.param("id", async (req, res, next) => {
   const { id } = req.params;
-  if (Number.isNaN(+id))
-    return res.status(400).send("Playlist id must be a number.");
+  if (!id) {
+    return res.status(400).send("Request body missing required field: id");
+  }
 
-  const playlist = await getPlaylist(id);
-  if (!playlist) return res.status(404).send("Playlist not found.");
+  req.playlist = await getPlaylist(id);
+  if (!req.playlist) return res.status(404).send("Playlist not found");
 
-  req.playlist = playlist;
   next();
 });
 
@@ -55,19 +55,6 @@ router.post("/:id/tracks", async (req, res) => {
   if (!trackId)
     return res.status(400).send("Request body is missing required fields.");
 
-  if (Number.isNaN(+trackId))
-    return res.status(400).send("Track id must be a number.");
-
-  try {
-    const track = await addTrackToPlaylist(req.playlist.id, trackId);
-    res.status(201).send(track);
-  } catch (err) {
-    if (err.code === "23503")
-      return res.status(400).send("Track does not exist.");
-
-    if (err.code === "23505")
-      return res.status(400).send("Playlist track already exists.");
-
-    console.error(err);
-  }
+  const track = await addTrackToPlaylist(req.playlist.id, trackId);
+  res.status(201).send(track);
 });
