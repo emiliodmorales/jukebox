@@ -29,9 +29,6 @@ router.post("/", async (req, res) => {
 
 router.param("id", async (req, res, next) => {
   const { id } = req.params;
-  if (!id) {
-    return res.status(400).send("Request body missing required field: id");
-  }
 
   req.playlist = await getPlaylist(id);
   if (!req.playlist) return res.status(404).send("Playlist not found");
