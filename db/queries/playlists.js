@@ -22,3 +22,30 @@ export async function createPlaylist({ name, description }) {
     console.log(err);
   }
 }
+
+/** @returns an array of all playlists */
+export async function getPlaylists() {
+  const SQL = `SELECT * FROM playlists`;
+  try {
+    const { rows: playlists } = await db.query(SQL);
+    return playlists;
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+/** @returns the playlist specified by id */
+export async function getPlaylist(id) {
+  const SQL = `
+    SELECT * FROM playlists
+    WHERE id = $1
+  `;
+  try {
+    const {
+      rows: [playlist],
+    } = await db.query(SQL, [id]);
+    return playlist;
+  } catch (err) {
+    console.error(err);
+  }
+}
