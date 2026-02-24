@@ -21,3 +21,19 @@ export async function addTrackToPlaylist(playlistId, trackId) {
     console.error(err);
   }
 }
+
+export async function getTracksByPlaylist(playlistId) {
+  const SQL = `
+    SELECT tracks.*
+    FROM tracks
+    JOIN playlists_tracks
+      ON playlists_tracks.playlist_id = $1
+      AND playlists_tracks.track_id = tracks.id
+  `;
+  try {
+    const { rows: tracks } = await db.query(SQL, [playlistId]);
+    return tracks;
+  } catch (err) {
+    console.error(err);
+  }
+}
