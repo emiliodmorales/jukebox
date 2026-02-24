@@ -12,14 +12,10 @@ export async function addTrackToPlaylist(playlistId, trackId) {
     VALUES ($1, $2)
     RETURNING *
   `;
-  try {
-    const {
-      rows: [playlistTrack],
-    } = await db.query(SQL, [playlistId, trackId]);
-    return playlistTrack;
-  } catch (err) {
-    console.error(err);
-  }
+  const {
+    rows: [playlistTrack],
+  } = await db.query(SQL, [playlistId, trackId]);
+  return playlistTrack;
 }
 
 export async function getTracksByPlaylist(playlistId) {
@@ -30,10 +26,6 @@ export async function getTracksByPlaylist(playlistId) {
       ON playlists_tracks.playlist_id = $1
       AND playlists_tracks.track_id = tracks.id
   `;
-  try {
-    const { rows: tracks } = await db.query(SQL, [playlistId]);
-    return tracks;
-  } catch (err) {
-    console.error(err);
-  }
+  const { rows: tracks } = await db.query(SQL, [playlistId]);
+  return tracks;
 }

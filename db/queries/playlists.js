@@ -13,25 +13,17 @@ export async function createPlaylist({ name, description }) {
     VALUES ($1, $2)
     RETURNING *
   `;
-  try {
-    const {
-      rows: [playlist],
-    } = await db.query(SQL, [name, description]);
-    return playlist;
-  } catch (err) {
-    console.log(err);
-  }
+  const {
+    rows: [playlist],
+  } = await db.query(SQL, [name, description]);
+  return playlist;
 }
 
 /** @returns an array of all playlists */
 export async function getPlaylists() {
   const SQL = `SELECT * FROM playlists`;
-  try {
-    const { rows: playlists } = await db.query(SQL);
-    return playlists;
-  } catch (err) {
-    console.error(err);
-  }
+  const { rows: playlists } = await db.query(SQL);
+  return playlists;
 }
 
 /** @returns the playlist specified by id */
@@ -40,12 +32,8 @@ export async function getPlaylist(id) {
     SELECT * FROM playlists
     WHERE id = $1
   `;
-  try {
-    const {
-      rows: [playlist],
-    } = await db.query(SQL, [id]);
-    return playlist;
-  } catch (err) {
-    console.error(err);
-  }
+  const {
+    rows: [playlist],
+  } = await db.query(SQL, [id]);
+  return playlist;
 }
