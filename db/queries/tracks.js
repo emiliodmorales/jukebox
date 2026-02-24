@@ -22,3 +22,30 @@ export async function createTrack({ name, durationMs }) {
     console.error(err);
   }
 }
+
+/** @returns an array of all tracks */
+export async function getTracks() {
+  const SQL = `SELECT * FROM tracks`;
+  try {
+    const { rows: tracks } = await db.query(SQL);
+    return tracks;
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+/** @returns the track specified by id */
+export async function getTrack(id) {
+  const SQL = `
+    SELECT * FROM tracks
+    WHERE id = $1
+  `;
+  try {
+    const {
+      rows: [track],
+    } = await db.query(SQL, [id]);
+    return track;
+  } catch (err) {
+    console.error(err);
+  }
+}
