@@ -20,11 +20,14 @@ export async function addTrackToPlaylist(playlistId, trackId) {
 
 export async function getTracksByPlaylist(playlistId) {
   const SQL = `
-    SELECT tracks.*
-    FROM tracks
-    JOIN playlists_tracks
-      ON playlists_tracks.playlist_id = $1
-      AND playlists_tracks.track_id = tracks.id
+    SELECT
+      tracks.*
+    FROM 
+      tracks
+      JOIN playlists_tracks
+        ON playlists_tracks.track_id = tracks.id
+    WHERE
+      playlists_tracks.playlist_id = $1
   `;
   const { rows: tracks } = await db.query(SQL, [playlistId]);
   return tracks;
